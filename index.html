@@ -4,12 +4,45 @@
   <title>The Chronicle</title>
 
   <style>
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      padding: 40px;
       font-family: "Georgia", serif;
       background-color: #f4f1ea;
       color: #2f2a25;
+    }
+
+    /* NAVIGATION BAR */
+
+    .navbar {
+      background-color: #8b6f47;
+      padding: 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    .navbar a:hover {
+      color: #f4f1ea;
+      text-decoration: underline;
+    }
+
+    .content {
+      padding: 40px;
     }
 
     h1 {
@@ -25,28 +58,34 @@
       margin-bottom: 40px;
     }
 
+    /* IMAGE SECTION */
+
     .image-section {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 60px;
     }
 
     .image-section img {
       width: 300px;
+      height: 400px;
+      object-fit: cover;
       border: 6px solid #c2b280;
       box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
       margin: 10px;
     }
 
+    /* QUOTES SECTION */
+
     .quotes-section {
       max-width: 700px;
       margin: auto;
+      margin-bottom: 60px;
     }
 
-    /* Base quote style */
     .quote {
       padding: 15px 20px;
       border-radius: 20px;
-      margin: 15px 0;
+      margin: 20px 0;
       color: black;
       font-size: 18px;
       position: relative;
@@ -75,11 +114,12 @@
     }
 
     .vex::after {
-      border-top-color: teal;
+      border-top-color: #78D8DF;
     }
 
     .cassandra {
       background-color: #800020;
+      color: white;
     }
 
     .cassandra::after {
@@ -88,25 +128,29 @@
 
     .augustus {
       background-color: #5a189a;
+      color: white;
     }
 
     .augustus::after {
       border-top-color: #5a189a;
     }
 
-    /* Suggestion button */
+    /* SUGGESTION BUTTON SECTION */
+
+    .suggestion-section {
+      text-align: center;
+      margin-bottom: 80px;
+    }
 
     .suggestion-button {
-      display: block;
-      width: 220px;
-      margin: 50px auto 0;
-      padding: 12px;
-      text-align: center;
+      display: inline-block;
+      padding: 12px 25px;
       background-color: #8b6f47;
       color: white;
       text-decoration: none;
       border-radius: 8px;
       transition: 0.3s;
+      font-weight: bold;
     }
 
     .suggestion-button:hover {
@@ -118,32 +162,48 @@
 
 <body>
 
-  <h1>The Chronicle</h1>
-  <div class="subtitle">Fragments of History Preserved in Ink</div>
-
-  <!-- IMAGES -->
-  <div class="image-section">
-    <img src="hyun.PNG" alt="Historical Image">
-    <img src="nikkiandjamie.PNG" alt="Historical Image">
-     <img src="farisandyumi.jpg" alt="Historical Image">
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <a href="#images">Images</a>
+    <a href="#quotes">Quotes</a>
+    <a href="#suggestions">Suggestions</a>
   </div>
 
-  <!-- QUOTES -->
-  <div class="quotes-section">
+  <div class="content">
 
-    <!-- VEX -->
-    <div class="quote vex">
-      "But you can't hold that against me."
-      <div class="character-name">— Vex</div>
+    <h1>The Chronicle</h1>
+    <div class="subtitle">Fragments of History Preserved in Ink</div>
+
+    <!-- IMAGES -->
+    <div id="images" class="image-section">
+      <h2>Historical Images</h2>
+      <img src="nikkiandjamie.PNG" alt="Historical Image">
+      <img src="hyun.PNG" alt="Historical Image">
+      <img src="farisandyumi.jpg" alt="Historical Image">
     </div>
 
-      <!-- Put quotes here -->
-   
-  </div>
+    <!-- QUOTES -->
+    <div id="quotes" class="quotes-section">
+      <h2>Recorded Dialogue</h2>
 
-  <a href="suggestions.html" target="_blank" class="suggestion-button">
-    Leave a Suggestion
-  </a>
+      <div class="quote vex">
+        "But you can't hold that against me."
+        <div class="character-name">— Vex</div>
+      </div>
+
+      <!-- Add more quotes below -->
+
+    </div>
+
+    <!-- SUGGESTIONS -->
+    <div id="suggestions" class="suggestion-section">
+      <h2>Contribute to the Archive</h2>
+      <a href="suggestions.html" target="_blank" class="suggestion-button">
+        Leave a Suggestion
+      </a>
+    </div>
+
+  </div>
 
 </body>
 </html>
