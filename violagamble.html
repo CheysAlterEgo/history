@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viola's Gambling Den</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Courier New",monospace;background:#050505;color:#eee;overflow:hidden}
+
+.text-glitch{animation:glitchText .2s infinite}
+@keyframes glitchText{0%{opacity:1}50%{opacity:.7}100%{opacity:1}}
+
+.shake{animation:shake .15s infinite}
+@keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(2px,-2px)}50%{transform:translate(-2px,2px)}75%{transform:translate(2px,2px)}100%{transform:translate(0,0)}}
+
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center}
+#box{background:#111;border:2px solid crimson;padding:30px;width:500px;text-align:center;box-shadow:0 0 25px crimson}
+
+button{margin:10px;padding:10px 20px;background:black;border:1px solid crimson;color:white;cursor:pointer}
+button:hover{background:crimson}
+
+#main{display:none;height:100vh;background:linear-gradient(black,#200000)}
+#top{position:absolute;top:0;width:100%;padding:10px;border-bottom:1px solid crimson;background:black}
+#games{display:flex;justify-content:center;gap:40px;margin-top:120px}
+.card{border:2px solid crimson;padding:30px;cursor:pointer}
+
+.game{position:fixed;inset:0;background:#100;display:none;flex-direction:column;align-items:center;justify-content:center}
+.close{position:absolute;top:10px;right:20px;cursor:pointer;font-size:24px}
+
+.cardbox{display:flex;gap:10px;margin:10px}
+.playcard{width:60px;height:90px;background:white;color:black;display:flex;align-items:center;justify-content:center;font-weight:bold;border:2px solid black}
+.hidden{background:black;color:black;border:2px solid white}
+
+#totals{margin:10px}
+
+#wheelDisplay{width:120px;height:120px;border-radius:50%;border:4px solid white;display:flex;align-items:center;justify-content:center;margin:20px;font-size:24px}
+.spin{animation:spin 1s linear}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(720deg)}}
+
+#numbers{display:grid;grid-template-columns:repeat(6,50px);gap:5px}
+.num{padding:10px;text-align:center;cursor:pointer}
+.red{background:red}
+.black{background:black;color:white;border:1px solid white}
+
+#popup,#taunt,#playAgainOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);align-items:center;justify-content:center}
+#popup div,#taunt div,#playAgainOverlay div{background:#111;padding:20px;border:2px solid crimson;text-align:center}
+
+#debt{display:none;position:fixed;inset:0;background:black;color:red;align-items:center;justify-content:center;font-size:24px;text-align:center}
+</style>
+</head>
+<body>
+
+<div id="overlay"><div id="box">
+<h1 id="title">Hi, my newest victim.</h1>
+<p id="text">Considering what's happening in Metronis right now... your friends and family might be dying. You might even be the one killing them for bounties. But that means more money in the economy.</p>
+<p>Would you like to play?</p>
+<button onclick="choose('no')">No</button>
+<button onclick="choose('yes')">Yes</button>
+</div></div>
+
+<div id="main">
+<div id="top">Currency: <span id="money">50</span></div>
+<div id="games">
+<div class="card" onclick="openGame('bj')">21</div>
+<div class="card" onclick="openGame('roulette')">Roulette</div>
+</div>
+</div>
+
+<div id="bj" class="game">
+<div id="top">Currency: <span id="money2">50</span></div>
+<div class="close" onclick="closeGame()">X</div>
+<h2>21</h2>
+<p>Dealer</p>
+<div class="cardbox" id="dealer"></div>
+<p>You</p>
+<div class="cardbox" id="player"></div>
+<div id="totals">Total: <span id="total">0</span></div>
+<button onclick="hit()">Hit (-5)</button>
+<button onclick="stand()">Stand</button>
+<p id="bjmsg"></p>
+</div>
+
+<div id="roulette" class="game">
+<div id="top">Currency: <span id="money3">50</span></div>
+<div class="close" onclick="closeGame()">X</div>
+<h2>Roulette</h2>
+<div id="wheelDisplay">?</div>
+<div id="numbers"></div>
+<p id="rmsg"></p>
+</div>
+
+<div id="popup"><div><p>You're halfway to being broke.</p><button onclick="closePopup()">OK</button></div></div>
+<div id="taunt"><div><p id="tauntText"></p><button onclick="closeTaunt()">Continue</button></div></div>
+<div id="playAgainOverlay"><div><p id="resultText"></p><button onclick="initBJ();closeOverlay()">Play Again</button></div></div>
+
+<div id="debt">You are in debt.<br>There is no leaving.</div>
+
+<script>
+let money=50,step=0,playerCards=[],dealerCards=[],warned=false,hitCount=0;
+
+// ---- TAUNT CONTROL (NEW) ----
+let tauntCooldown = 0;
+
+function maybeTaunt(msgOptions, chance=0.25){
+    if(tauntCooldown > 0) return;
+    if(Math.random() < chance){
+        const msg = msgOptions[Math.floor(Math.random()*msgOptions.length)];
+        showTaunt(msg);
+        tauntCooldown = 3;
+    }
+}
+
+function tickTauntCooldown(){
+    if(tauntCooldown > 0) tauntCooldown--;
+}
+
+// ---- MONEY SYSTEM ----
+function updateMoney(){
+    ['money','money2','money3'].forEach(id=>
+        document.getElementById(id).innerText=money
+    );
+
+    if(money<25){
+        document.body.classList.add('text-glitch');
+        if(!warned){popup();warned=true}
+    }
+
+    if(money<15){
+        document.querySelectorAll('#main,.game')
+        .forEach(e=>e.classList.add('shake'))
+    }
+
+    if(money<=0){
+        document.getElementById('debt').style.display='flex'
+    }
+}
+
+// ---- UI ----
+function popup(){document.getElementById('popup').style.display='flex'}
+function closePopup(){document.getElementById('popup').style.display='none'}
+function showTaunt(msg){
+    document.getElementById('tauntText').innerText=msg;
+    document.getElementById('taunt').style.display='flex'
+}
+function closeTaunt(){document.getElementById('taunt').style.display='none'}
+function closeOverlay(){document.getElementById('playAgainOverlay').style.display='none'}
+
+// ---- INTRO ----
+function choose(ans){
+    const t=document.getElementById('text'),
+          ti=document.getElementById('title'),
+          b=document.getElementById('box');
+
+    if(ans==='yes'){start();return}
+
+    step++;
+    ti.style.display='none';
+
+    const l=[
+        "Are you sure?",
+        "Really sure?",
+        "You're already here.",
+        "Just play.",
+        "I'm annoyed.",
+        "I'm sick of you."
+    ];
+
+    t.innerText=l[Math.min(step-1,l.length-1)];
+
+    if(step>5){
+        b.innerHTML='<p>Just click yes.</p><button onclick="start()">Yes</button>'
+    }
+}
+
+function start(){
+    overlay.style.display='none';
+    main.style.display='block';
+    updateMoney();
+}
+
+// ---- GAME CONTROL ----
+function openGame(id){
+    document.getElementById(id).style.display='flex';
+    if(id==='bj')initBJ();
+    if(id==='roulette')initRoulette();
+}
+
+function closeGame(){
+    document.querySelectorAll('.game').forEach(g=>g.style.display='none')
+}
+
+// ---- CARDS ----
+function randomCard(){return Math.floor(Math.random()*10)+1}
+function sum(c){return c.reduce((a,b)=>a+b,0)}
+
+// ---- BLACKJACK INIT ----
+function initBJ(){
+    playerCards=[randomCard(),randomCard()];
+    dealerCards=[randomCard()];
+    hitCount=0;
+    tauntCooldown=0;
+
+    renderCards();
+    updateTotal();
+    document.getElementById('bjmsg').innerText=''
+}
+
+// ---- RENDER ----
+function renderCards(){
+    player.innerHTML='';
+    dealer.innerHTML='';
+
+    playerCards.forEach((c,i)=>{
+        let div=document.createElement('div');
+        div.className='playcard'+(i===1?' hidden':'');
+        div.innerText=c;
+        div.onclick=()=>div.classList.remove('hidden');
+        player.appendChild(div);
+    });
+
+    dealerCards.forEach((c,i)=>{
+        let div=document.createElement('div');
+        div.className='playcard'+(i===0?'':' hidden');
+        div.innerText=c;
+        dealer.appendChild(div);
+    });
+}
+
+function updateTotal(){
+    document.getElementById('total').innerText=sum(playerCards)
+}
+
+// ---- END GAME ----
+function endBJ(result,win){
+    document.getElementById('resultText').innerText=result;
+    document.getElementById('playAgainOverlay').style.display='flex';
+
+    if(win) money+=5;
+    updateMoney();
+}
+
+// ---- HIT (FIXED) ----
+function hit(){
+    tickTauntCooldown();
+
+    money-=10;
+    hitCount++;
+    playerCards.push(randomCard());
+
+    renderCards();
+    updateTotal();
+
+    maybeTaunt(
+        ["Again?", "Risky move.", "You’re pushing it."],
+        0.2
+    );
+
+    if(sum(playerCards)>21){
+        revealDealer(()=>endBJ("Busted. Can you not count?",false));
+    }
+
+    updateMoney();
+}
+
+// ---- STAND (FIXED) ----
+function stand(){
+    tickTauntCooldown();
+
+    maybeTaunt(
+        ["Holding.", "You stop here."],
+        0.15
+    );
+
+    let win=Math.random()<0.1;
+
+    if(win){
+        revealDealer(()=>endBJ("You win... 5 coins has been rewarded.",true));
+    } else {
+        while(sum(dealerCards)<17){
+            dealerCards.push(randomCard());
+        }
+        revealDealer(()=>endBJ("Dealer wins. Come on try again, next time you'll win",false));
+    }
+
+    updateMoney();
+}
+
+// ---- REVEAL ----
+function revealDealer(callback){
+    setTimeout(()=>{
+        renderCards();
+        document.querySelectorAll('#dealer .playcard')
+            .forEach(c=>c.classList.remove('hidden'));
+
+        if(callback)callback();
+    },700);
+}
+
+// ---- ROULETTE (UNCHANGED) ----
+function initRoulette(){
+    numbers.innerHTML='';
+    for(let i=1;i<=12;i++){
+        let div=document.createElement('div');
+        div.className='num '+(i%2===0?'red':'black');
+        div.innerText=i;
+        div.onclick=()=>preSpin(i);
+        numbers.appendChild(div)
+    }
+}
+
+function preSpin(choice){
+    if(Math.random()<0.3){
+        showTaunt("Are you sure about that number?");
+        setTimeout(()=>spin(choice),600)
+    } else spin(choice)
+}
+
+function spin(choice){
+    money-=10;
+    wheelDisplay.classList.add('spin');
+
+    setTimeout(()=>{
+        wheelDisplay.classList.remove('spin');
+
+        let win=Math.random()<0.1;
+        let result;
+
+        if(win){
+            result=choice;
+            money+=5;
+            document.getElementById('rmsg').innerText="You win.";
+        } else {
+            do{
+                result=Math.floor(Math.random()*12)+1
+            }while(result===choice);
+
+            document.getElementById('rmsg').innerText="You lost.";
+        }
+
+        wheelDisplay.innerText=result;
+        wheelDisplay.style.background=(result%2===0?'red':'black');
+
+        if(result%2!==0){
+            wheelDisplay.style.border='4px solid white';
+        }
+
+        updateMoney();
+    },1000)
+}
+</script>
+
+</body>
+</html>
