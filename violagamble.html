@@ -76,7 +76,7 @@ button:hover{background:crimson}
 <p>You</p>
 <div class="cardbox" id="player"></div>
 <div id="totals">Total: <span id="total">0</span></div>
-<button onclick="hit()">Hit (-5)</button>
+<button onclick="hit()">Hit (-1)</button>
 <button onclick="stand()">Stand</button>
 <p id="bjmsg"></p>
 </div>
@@ -244,7 +244,7 @@ function endBJ(result,win){
 function hit(){
     tickTauntCooldown();
 
-    money-=10;
+    money-=1;
     hitCount++;
     playerCards.push(randomCard());
 
