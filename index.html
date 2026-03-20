@@ -83,13 +83,17 @@
     }
 
     .quote {
-      padding: 15px 20px;
-      border-radius: 20px;
-      margin: 20px 0;
-      color: black;
-      font-size: 18px;
-      position: relative;
-    }
+  padding: 15px 20px;
+  border-radius: 20px;
+  margin: 20px 0;
+  color: black;
+  font-size: 18px;
+  position: relative;
+
+  opacity: 1; /* fully visible */
+  transform: translateY(0); /* start in normal position */
+  transition: transform 0.2s ease-out; /* subtle slide on scroll */
+}
 
     .quote::after {
       content: "";
@@ -121,18 +125,39 @@
       background-color: #C7BDF5;
     }
 
-    .deviora::after {
-      border-top-color: #800020;
+    .hyun {
+      background-color: #b3e1e6;
     }
 
-    .augustus {
-      background-color: #5a189a;
-      color: white;
+     .Unknown {
+      background-color: #dec8a9;
     }
 
-    .augustus::after {
-      border-top-color: #5a189a;
+      .luna {
+      background-color: #ebc5d5;
     }
+    
+     .aiko {
+      background-color: #9fedad;
+    }
+    
+    .yumiko {
+      background-color:#f065aa;
+    }
+     .susurri {
+      background-color:#edb48e;
+    }
+    .nikki {
+      background-color:#e280ed;
+    }
+     .yunsu {
+      background-color:#c5d5e8;
+    }
+    
+    .melanie {
+      background-color:#bca7c2;
+    }
+
 
     /* SUGGESTION BUTTON SECTION */
 
@@ -156,6 +181,28 @@
       background-color: #6e5436;
     }
 
+/* SCROLL AREA (invisible box) */
+.quotes-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+
+  /* makes it NOT look like a box */
+  background: transparent;
+
+  /* remove fade mask for full readability */
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* optional: hide scrollbar for cleaner look */
+.quotes-scroll::-webkit-scrollbar {
+  width: 0px;
+}
+
+.quotes-scroll {
+  scroll-behavior: smooth;
+}
   </style>
 </head>
 
@@ -185,8 +232,11 @@
     </div>
 
     <!-- QUOTES -->
-    <div id="quotes" class="quotes-section">
-      <h2>Recorded Dialogue</h2>
+   <div id="quotes" class="quotes-section">
+  <h2>Recorded Dialogue</h2>
+
+  <div class="quotes-scroll">
+
 
       <div class="quote vex">
         "But you can't hold that against me."
@@ -198,12 +248,154 @@
         <div class="character-name">— Deviora</div>
       </div>
 
-     
+       <div class="quote hyun">
+        "I'm just here, keeping life interesting."
+        <div class="character-name">— Hyun</div>
+      </div>
 
+      <div class="quote Unknown">
+        "Aiko, why are you so mad? You’re the one who cheated on me."
+        <div class="character-name">— Unknown</div>
+      </div>
+
+      <div class="quote luna">
+        "Can't tell if i'm the peacemaker or just an unlicensed psychologist."
+        <div class="character-name">— Luna</div>
+      </div>
+  
+      <div class="quote aiko">
+        "I don’t know what tastes better me or this cake."
+        <div class="character-name">— Aiko</div>
+      </div>
+      
+       <div class="quote hyun">
+        "Umm hola??"
+        <div class="character-name">— Hyun</div>
+      </div>
+      
+<div class="quote aiko">
+        "Then he started talking about how lifes a mess blah blah…like no one cares."
+        <div class="character-name">— Aiko</div>
+      </div>
+      
+      <div class="quote luna">
+        "Yeah, onto something... maybe on drugs."
+        <div class="character-name">— Luna</div>
+      </div>
+      
+      <div class="quote yumiko">
+        "Jail's just another chapter; I'm still running shit."
+        <div class="character-name">— Yumiko</div>
+      </div>
+      
+      <div class="quote hyun">
+        "Choose your words wisely, I’ll steal your soul (｡･ω･｡)"
+        <div class="character-name">— Hyun</div>
+      </div>
+      
+       <div class="quote yumiko">
+  "Men, I swear."
+  <div class="character-name">— Yumiko</div>
+</div>
+
+<div class="quote susurri">
+  "Oh god, i hate French."
+  <div class="character-name">— Susurri</div>
+</div>
+
+<div class="quote aiko">
+  "No, I'll thug it out."
+  <div class="character-name">— Aiko</div>
+</div>
+
+<div class="quote hyun">
+  "Why am I the center of your dreams? Seems like you're quite obsessed with me."
+  <div class="character-name">— Hyun</div>
+</div>
+      <div class="quote susurri">
+  "I have to hide! I skipped the line and stole someone's popcorn."
+  <div class="character-name">— Susurri</div>
+</div>
+
+    <div class="quote nikki">
+  "Ew, why would I talk about that skank Yunsu?"
+  <div class="character-name">— Nikki</div>
+</div>
+      
+     <div class="quote vex">
+  "Stop stripping! This is a townhouse, not a whore house!"
+  <div class="character-name">— Vex</div>
+</div>
+    
+     <div class="quote yumiko">
+  "Hm, your eyes are so red. Are you high? Can I have some?"
+  <div class="character-name">— Yumiko</div>
+</div>
+    
+    
+     <div class="quote yunsu">
+  "I'll throw you off the balcony."
+  <div class="character-name">— Yunsu</div>
+</div>
+    
+    <div class="quote nikki">
+  "I'm gonna eat your ass."
+  <div class="character-name">— Nikki</div>
+</div>
+    
+     <div class="quote yumiko">
+  "Oh, training. I'm completely gutting these guys."
+  <div class="character-name">— Yumiko</div>
+</div>
+    
+    <div class="quote melanie">
+  "I mean, I’m on my 5th cup, so…"
+  <div class="character-name">— Melanie</div>
+</div>
+    
+     <div class="quote vex">
+  "Yeah, get back in the kitchen."
+  <div class="character-name">— Vex</div>
+</div>
+    
+     <div class="quote aiko">
+  "Wing it? Luna, you can't just wing a fight to the death."
+  <div class="character-name">— Aiko</div>
+</div>
+    
+    <div class="quote yunsu">
+  "Of course. Everything is under control."
+  <div class="character-name">— Yunsu</div>
+</div>
+    
+     <div class="quote yumiko">
+  "Have you ever tried human before?"
+  <div class="character-name">— Yumiko</div>
+</div>
+    
+    <div class="quote vex">
+  "Please don't tell me you're going to cannibalize somebody again."
+  <div class="character-name">— Vex</div>
+</div>
+    
+     <div class="quote vex">
+  "A woman? Bros starving."
+  <div class="character-name">— Vex</div>
+</div>
+    
+    
+     <div class="quote vex">
+  "It would be a good morning if Stella would shut the fuck up."
+  <div class="character-name">— Vex</div>
+</div>
+    
+    
+    
+    
       <!-- Add more quotes below -->
 
-    </div>
-
+     </div> <!-- end quotes-scroll -->
+</div>
     <!-- SUGGESTIONS -->
     <div id="suggestions" class="suggestion-section">
       <h2>Contribute to the Archive</h2>
@@ -213,6 +405,38 @@
     </div>
 
   </div>
+  
+ <script>
+const container = document.querySelector('.quotes-scroll');
+const quotes = container.querySelectorAll('.quote');
 
+function handleScroll() {
+  const containerHeight = container.clientHeight;
+  const scrollTop = container.scrollTop;
+
+  quotes.forEach(quote => {
+    const offsetTop = quote.offsetTop;
+    const quoteHeight = quote.offsetHeight;
+
+    // calculate center of quote relative to container
+    const quoteCenter = offsetTop + quoteHeight / 2;
+
+    // distance from container center
+    const distance = Math.abs((scrollTop + containerHeight / 2) - quoteCenter);
+
+    // subtle slide effect (optional)
+    const maxDistance = containerHeight / 2;
+    let translateY = (distance / maxDistance) * 10; // small movement
+
+    // apply only transform, no opacity
+    quote.style.transform = `translateY(0px)`;
+  });
+}
+
+// listen to scroll inside container
+container.addEventListener('scroll', handleScroll);
+window.addEventListener('load', handleScroll);
+</script>
 </body>
 </html>
+
