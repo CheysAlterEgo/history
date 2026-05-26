@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pride Month</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(135deg, #fff0f7, #f7f0ff, #eef7ff);
+      overflow-x: hidden;
+      color: #2d1846;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* ---------------- LANDING PAGE ---------------- */
+
+    #landingPage {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(
+        135deg,
+        #ff4d6d,
+        #ff9e00,
+        #ffee00,
+        #4cd964,
+        #4da6ff,
+        #8b5cf6,
+        #ff4dcb
+      );
+      background-size: 400% 400%;
+      animation: rainbowShift 10s ease infinite;
+    }
+
+    @keyframes rainbowShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .landing-content {
+      text-align: center;
+      padding: 40px;
+      color: white;
+      max-width: 850px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .landing-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1;
+      margin-bottom: 25px;
+      text-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .landing-subtitle {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      margin-bottom: 40px;
+      line-height: 1.5;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .rainbow-button {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #ff4d6d,
+        #ff9e00,
+        #ffee00,
+        #4cd964,
+        #4da6ff,
+        #8b5cf6,
+        #ff4dcb,
+        #ff4d6d
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      animation: float 2.8s ease-in-out infinite;
+      transition: transform 0.25s ease;
+    }
+
+    .rainbow-button:hover {
+      transform: scale(1.08);
+    }
+
+    .rainbow-inner {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ff4dcb;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 20px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .sparkle {
+      position: absolute;
+      font-size: 1.6rem;
+      animation: sparkleFloat linear infinite;
+      opacity: 0.9;
+    }
+
+    @keyframes sparkleFloat {
+      from {
+        transform: translateY(100vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(-120vh) rotate(360deg);
+      }
+    }
+
+    .fade-out {
+      animation: fadeAway 1s forwards;
+    }
+
+    @keyframes fadeAway {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    /* ---------------- MAIN SITE ---------------- */
+
+    .site-wrapper {
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+    }
+
+    .show-site {
+      display: flex;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(255,255,255,0.75);
+      border-bottom: 2px solid rgba(255,255,255,0.4);
+      padding: 16px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ff4d6d, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .menu {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .menu button {
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: white;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #5f3d8f;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      transform: translateY(-2px);
+      background: linear-gradient(90deg, #ff77c8, #9d7dff);
+      color: white;
+    }
+
+    main {
+      flex: 1;
+      padding: 35px 24px 70px;
+    }
+
+    .page {
+      display: none;
+      animation: pageFade 0.5s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes pageFade {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-box {
+      text-align: center;
+      padding: 40px 20px 50px;
+      margin-bottom: 40px;
+      border-radius: 40px;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    }
+
+    .hero-box h1 {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #ff5ea8, #7a5cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-box p {
+      font-size: 1.15rem;
+      max-width: 780px;
+      margin: auto;
+      line-height: 1.7;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 22px;
+      padding-left: 8px;
+    }
+
+    .flag-section {
+      margin-bottom: 55px;
+    }
+
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 260px));
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .character-card {
+      border-radius: 28px;
+      overflow: hidden;
+      background: white;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transition: transform 0.25s ease;
+    }
+.character-info {
+  padding: 18px;
+  text-align: center;
+  min-height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+    .character-card:hover {
+      transform: translateY(-8px) rotate(1deg);
+    }
+
+    .flag-border {
+      padding: 7px;
+    }
+
+    .card-inner {
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    .character-image {
+      width: 100%;
+      height: 220px;
+      aspect-ratio: 1 / 1;
+      max-height: 220px;
+      object-fit: cover;
+      object-position: center;
+      background: #f5f5f5;
+    }
+
+    .character-info {
+      padding: 18px;
+      text-align: center;
+    }
+
+    .character-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+    .character-label {
+      opacity: 0.7;
+    }
+
+    /* FLAG COLORS */
+
+    .gay {
+      background: linear-gradient(
+        to bottom,
+        #078d70,
+        #26ceaa,
+        #98e8c1,
+        #ffffff,
+        #7bade2,
+        #5049cc,
+        #3d1a78
+      );
+    }
+
+    .lesbian {
+      background: linear-gradient(
+        to bottom,
+        #d52d00,
+        #ef7627,
+        #ff9a56,
+        #ffffff,
+        #d162a4,
+        #b55690,
+        #a30262
+      );
+    }
+
+    .bisexual {
+      background: linear-gradient(
+        to bottom,
+        #d60270 0%,
+        #d60270 40%,
+        #9b4f96 40%,
+        #9b4f96 60%,
+        #0038a8 60%,
+        #0038a8 100%
+      );
+    }
+
+    .trans {
+      background: linear-gradient(
+        to bottom,
+        #5bcffb,
+        #f5abb9,
+        #ffffff,
+        #f5abb9,
+        #5bcffb
+      );
+    }
+
+    .asexual {
+      background: linear-gradient(
+        to bottom,
+        #000000,
+        #a3a3a3,
+        #ffffff,
+        #800080
+      );
+    }
+
+    /* ---------------- GACHA PAGE ---------------- */
+
+    .gacha-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .gacha-machine,
+    .gacha-results {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(14px);
+      border-radius: 35px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .gacha-machine h2,
+    .gacha-results h2 {
+      margin-bottom: 18px;
+      font-size: 2rem;
+    }
+
+    .pull-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .pull-buttons button {
+      padding: 15px 22px;
+      border-radius: 18px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: transform 0.2s ease;
+    }
+
+    .pull-buttons button:hover {
+      transform: scale(1.05);
+    }
+
+    .single-btn {
+      background: linear-gradient(90deg, #ff77c8, #ff4d6d);
+    }
+
+    .ten-btn {
+      background: linear-gradient(90deg, #7a5cff, #4da6ff);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 180px));
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .pull-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      animation: popIn 0.4s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .pull-card img {
+      width: 100%;
+      height: 170px;
+      aspect-ratio: 1 / 1;
+      max-height: 170px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .pull-info {
+      padding: 12px;
+      text-align: center;
+    }
+
+    .rarity {
+      margin-top: 4px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .r4 { color: #4da6ff; }
+    .r5 { color: #ff5ea8; }
+    .rSecret { color: #ff9e00; }
+
+    .pool-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .pool-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: white;
+      padding: 12px;
+      border-radius: 18px;
+    }
+
+    .pool-item img {
+      width: 70px;
+      height: 70px;
+      border-radius: 14px;
+      object-fit: cover;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.95rem;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 950px) {
+      .gacha-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      header {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .landing-title {
+        font-size: 3rem;
+      }
+
+      .hero-box {
+        padding: 28px 18px 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LANDING PAGE -->
+
+  <div id="landingPage">
+
+    <div class="sparkle" style="left:5%; animation-duration: 12s;">✨</div>
+    <div class="sparkle" style="left:18%; animation-duration: 15s;">🌈</div>
+    <div class="sparkle" style="left:32%; animation-duration: 10s;">⭐</div>
+    <div class="sparkle" style="left:48%; animation-duration: 18s;">🩷</div>
+    <div class="sparkle" style="left:60%; animation-duration: 13s;">🎉</div>
+    <div class="sparkle" style="left:76%; animation-duration: 16s;">🌈</div>
+    <div class="sparkle" style="left:90%; animation-duration: 11s;">✨</div>
+
+    <div class="landing-content">
+      <h1 class="landing-title">Happy Pride Month 🌈</h1>
+
+      <p class="landing-subtitle">
+        Shout out to all of you 💖<br><br>
+        Click the rainbow to enter the showcase!
+      </p>
+
+      <button class="rainbow-button" onclick="enterSite()">
+        <div class="rainbow-inner">
+          TASTE<br>THE RAINBOW
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN WEBSITE -->
+
+  <div class="site-wrapper" id="mainSite">
+
+    <header>
+      <div class="logo">🌈 Archive</div>
+
+      
+    </header>
+
+    <main>
+
+      <!-- SHOWCASE PAGE -->
+
+      <section class="page active" id="showcase">
+
+        <div class="hero-box">
+          <h1>Happy Gay Month, Cause You're Gay and Stuff ✨</h1>
+
+          <p>
+            We Love Yawl!!
+          </p>
+        </div>
+
+        <!-- GAY SECTION -->
+
+        <div class="flag-section">
+          <h2 class="section-title">🌈 Gay Characters</h2>
+
+          <div class="character-grid">
+
+            <div class="character-card">
+              <div class="flag-border gay">
+                <div class="card-inner">
+                  <img src="farisp.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Faris</div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="character-card">
+              <div class="flag-border gay">
+                <div class="card-inner">
+                  <img src="minsup.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Minsu</div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- LESBIAN SECTION -->
+
+        <div class="flag-section">
+          <h2 class="section-title">🧡 Lesbian Characters</h2>
+
+          <div class="character-grid">
+
+            <div class="character-card">
+              <div class="flag-border lesbian">
+                <div class="card-inner">
+                  <img src="images/lesbian1.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Luna</div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="character-card">
+              <div class="flag-border lesbian">
+                <div class="card-inner">
+                  <img src="images/lesbian2.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Naiomi</div>
+                  
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BISEXUAL SECTION -->
+
+        <div class="flag-section">
+          <h2 class="section-title">💖 Bisexual Characters</h2>
+
+          <div class="character-grid">
+
+            <div class="character-card">
+              <div class="flag-border bisexual">
+                <div class="card-inner">
+                  <img src="yumikop.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Yumiko</div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="character-card">
+              <div class="flag-border bisexual">
+                <div class="card-inner">
+                  <img src="images/bi1.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Aiko</div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="character-card">
+              <div class="flag-border bisexual">
+                <div class="card-inner">
+                  <img src="nikkip.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Nikki</div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="character-card">
+              <div class="flag-border bisexual">
+                <div class="card-inner">
+                  <img src="jamiep" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Jamie</div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="character-card">
+              <div class="flag-border bisexual">
+                <div class="card-inner">
+                  <img src="damianp.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Damian</div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+
+          </div>
+        </div>
+
+        <!-- TRANS SECTION -->
+
+        <div class="flag-section">
+          <h2 class="section-title">🩵 Trans Characters</h2>
+
+          <div class="character-grid">
+
+            <div class="character-card">
+              <div class="flag-border trans">
+                <div class="card-inner">
+                  <img src="images/trans1.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Chico</div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+             <div class="character-card">
+              <div class="flag-border trans">
+                <div class="card-inner">
+                  <img src="images/trans1.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Minjung Moon</div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ACE SECTION -->
+
+        <div class="flag-section">
+          <h2 class="section-title">🖤 Asexual Characters</h2>
+
+          <div class="character-grid">
+
+            <div class="character-card">
+              <div class="flag-border asexual">
+                <div class="card-inner">
+                  <img src="images/ace1.jpg" class="character-image">
+
+                  <div class="character-info">
+                    <div class="character-name">Vexie</div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- GACHA PAGE -->
+
+     
+  <script>
+
+    // ENTER SITE
+
+    function enterSite() {
+      const landing = document.getElementById('landingPage');
+      const site = document.getElementById('mainSite');
+
+      landing.classList.add('fade-out');
+      site.classList.add('show-site');
+
+      setTimeout(() => {
+        landing.style.display = 'none';
+      }, 1000);
+    }
+
+    // PAGE SWITCHING
+
+    function switchPage(pageId, button) {
+
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+
+      document.getElementById(pageId).classList.add('active');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      button.classList.add('active');
+    }
+
+    // ---------------- GACHA SYSTEM ----------------
+
+    // EASY TO EDIT:
+    // Replace names, rarities, and image paths.
+
+    const characterPool = [
+
+      // COMMON IMAGES
+      // These show up more often.
+
+      {
+        name: 'Cute Pride Sticker',
+        rarity: 'Common Image',
+        type: 'image',
+        image: 'images/common1.jpg'
+      },
+
+      {
+        name: 'Rainbow Edit',
+        rarity: 'Common Image',
+        type: 'image',
+        image: 'images/common2.jpg'
+      },
+
+      {
+        name: 'Matching Icons',
+        rarity: 'Common Image',
+        type: 'image',
+        image: 'images/common3.jpg'
+      },
+
+      {
+        name: 'Pride Wallpaper',
+        rarity: 'Common Image',
+        type: 'image',
+        image: 'images/common4.jpg'
+      },
+
+      // RARE CHARACTERS
+      // These are harder to pull.
+
+      {
+        name: 'Character Name',
+        rarity: '4-Star Character',
+        type: 'character',
+        image: 'images/gay1.jpg'
+      },
+
+      {
+        name: 'Character Name',
+        rarity: '5-Star Character',
+        type: 'character',
+        image: 'images/gay2.jpg'
+      },
+
+      {
+        name: 'Character Name',
+        rarity: 'Secret Character',
+        type: 'character',
+        image: 'images/trans1.jpg'
+      }
+
+    ];
+
+    function pullCharacters(amount) {
+
+      const resultsGrid = document.getElementById('resultsGrid');
+      resultsGrid.innerHTML = '';
+
+      for (let i = 0; i < amount; i++) {
+
+        // Makes common images appear more often.
+        // Add more copies of commons to increase their odds.
+
+        const weightedPool = [
+          characterPool[0],
+          characterPool[0],
+          characterPool[0],
+          characterPool[1],
+          characterPool[1],
+          characterPool[2],
+          characterPool[2],
+          characterPool[3],
+          characterPool[3],
+          characterPool[4],
+          characterPool[5],
+          characterPool[6]
+        ];
+
+        const randomCharacter = weightedPool[
+          Math.floor(Math.random() * weightedPool.length)
+        ];
+
+        const card = document.createElement('div');
+        card.className = 'pull-card';
+
+        let rarityClass = 'r4';
+
+        if (randomCharacter.rarity.includes('5-Star')) {
+          rarityClass = 'r5';
+        }
+
+       
+
+        card.innerHTML = `
+          <img src="${randomCharacter.image}">
+
+          <div class="pull-info">
+            <strong>${randomCharacter.name}</strong>
+            ${randomCharacter.type === 'character' ? '🌈' : '🖼️'}
+
+            <div class="rarity ${rarityClass}">
+              ${randomCharacter.rarity}
+            </div>
+          </div>
+        `;
+
+        resultsGrid.appendChild(card);
+      }
+    }
+
+  </script>
+
+</body>
+</html>
+
