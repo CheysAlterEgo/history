@@ -1026,7 +1026,7 @@ Press Start!
 </div>
 
 </section>
-  <script>
+<script>
 
 // ENTER SITE
 function enterSite() {
@@ -1056,6 +1056,9 @@ function switchPage(pageId, button) {
   button.classList.add('active');
 }
 
+// 🎧 CLICK SOUND (ADD THIS)
+const clickSound = new Audio("click.mp3");
+
 // DATA
 const gifts = [
   "🐱 Stuff Animal",
@@ -1071,7 +1074,7 @@ const gifts = [
   "🍎 Apple",
   "🎀 Bow",
   "💰 Money",
-  "👛 Purse ",
+  "👛 Purse",
   "🍓 Strawberry",
   "🧁 Cupcake",
 ];
@@ -1117,9 +1120,9 @@ function startGame() {
   newRound();
 }
 
-// TIME SCALING (your system fixed)
+// TIME SCALING
 function getTimeLimit() {
-   if (score >= 30) return 10;
+  if (score >= 30) return 10;
   if (score >= 20) return 15;
   if (score >= 15) return 25;
   if (score >= 10) return 30;
@@ -1128,7 +1131,7 @@ function getTimeLimit() {
   return 60;
 }
 
-// TIMER HANDLER (IMPORTANT FIX)
+// TIMER HANDLER
 function startTimer() {
   clearInterval(timer);
 
@@ -1192,8 +1195,12 @@ function createGiftButtons() {
   });
 }
 
-// SELECT GIFT
+// SELECT GIFT (🎧 SOUND ADDED HERE)
 function selectGift(gift) {
+
+  // play click sound
+  clickSound.currentTime = 0;
+  clickSound.play();
 
   if (!requestedGifts.includes(gift)) {
     makeCharacterMad(currentCharacter.name + " didn't want that!");
