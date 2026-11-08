@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Arcade</title>
+
+<style>
+
+:root {
+
+  --ink: #34445d;
+
+  --muted: #71809a;
+
+  --pink: #f6b8d0;
+
+  --blue: #a9d9f4;
+
+  --mint: #b9ead9;
+
+  --lavender: #d1c5f5;
+
+}
+
+* {
+
+  box-sizing: border-box;
+
+}
+
+body {
+
+  margin: 0;
+
+  min-height: 100vh;
+
+  color: var(--ink);
+
+  font-family: "Trebuchet MS", system-ui, sans-serif;
+
+  background: linear-gradient(
+
+    135deg,
+
+    #fce8f0,
+
+    #e5f4ff,
+
+    #e8f8f0
+
+  );
+
+  padding: 25px 15px;
+
+}
+
+button {
+
+  font: inherit;
+
+  cursor: pointer;
+
+}
+
+.app {
+
+  width: min(1100px, 100%);
+
+  margin: auto;
+
+}
+
+header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 15px;
+
+  margin-bottom: 25px;
+
+}
+
+h1 {
+
+  margin: 0;
+
+  font-size: 1.8rem;
+
+}
+
+.subtitle {
+
+  color: var(--muted);
+
+  margin: 5px 0;
+
+}
+
+.stats {
+
+  display: flex;
+
+  gap: 10px;
+
+}
+
+.stat {
+
+  background: #ffffffbb;
+
+  border-radius: 15px;
+
+  padding: 12px 18px;
+
+  text-align: center;
+
+}
+
+.stat strong {
+
+  display: block;
+
+  font-size: 1.3rem;
+
+}
+
+.layout {
+
+  display: grid;
+
+  grid-template-columns: 1.5fr .75fr;
+
+  gap: 20px;
+
+}
+
+.machine-card,
+
+.side-card {
+
+  background: #ffffffbd;
+
+  border: 1px solid white;
+
+  border-radius: 25px;
+
+  padding: 20px;
+
+  box-shadow: 0 15px 40px #849bb52b;
+
+}
+
+.machine-heading {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-bottom: 15px;
+
+}
+
+.status {
+
+  background: #e3f7ef;
+
+  color: #638d85;
+
+  border-radius: 20px;
+
+  padding: 6px 12px;
+
+  font-size: .75rem;
+
+  font-weight: bold;
+
+}
+
+/* MACHINE */
+
+.machine {
+
+  padding: 15px;
+
+  border: 5px solid white;
+
+  border-radius: 25px;
+
+  background: linear-gradient(
+
+    120deg,
+
+    #f8d9e8,
+
+    #d8eafa,
+
+    #d9f2e8
+
+  );
+
+}
+
+.machine-top {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 5px 5px 15px;
+
+  font-size: .7rem;
+
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  color: #62748e;
+
+}
+
+.glass {
+
+  height: 390px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border: 5px solid white;
+
+  border-radius: 13px;
+
+  background: linear-gradient(
+
+    180deg,
+
+    #ffffff99,
+
+    #dceffa88
+
+  );
+
+}
+
+.rail {
+
+  position: absolute;
+
+  top: 17px;
+
+  left: 0;
+
+  right: 0;
+
+  height: 8px;
+
+  background: linear-gradient(#fff, #c2d4e6);
+
+}
+
+.claw {
+
+  position: absolute;
+
+  top: 18px;
+
+  left: 50%;
+
+  width: 45px;
+
+  height: 20px;
+
+  transform: translateX(-50%);
+
+  transition: left 0.45s ease,
+              top 1.35s cubic-bezier(.35,.1,.25,1);
+
+  z-index: 5;
+
+}
+
+.carriage {
+
+  width: 44px;
+
+  height: 13px;
+
+  margin: auto;
+
+  border-radius: 8px;
+
+  background: linear-gradient(#fff, #aabed3);
+
+  border: 2px solid white;
+
+}
+
+.cable {
+
+  width: 3px;
+
+  height: 75px;
+
+  background: #9aacc1;
+
+  margin: auto;
+
+ transition: height 1.35s ease;
+
+}
+
+.claw-head {
+
+  position: relative;
+
+  width: 42px;
+
+  height: 28px;
+
+  margin: auto;
+
+  border-radius: 8px 8px 13px 13px;
+
+  background: linear-gradient(145deg, white, #b8cce0);
+
+  border: 2px solid white;
+
+}
+
+.arm {
+
+  position: absolute;
+
+  top: 20px;
+
+  width: 5px;
+
+  height: 25px;
+
+  background: #829bb6;
+
+  border-radius: 5px;
+
+  transform-origin: top;
+
+  transition: transform .3s;
+
+}
+
+.arm.left {
+
+  left: 5px;
+
+  transform: rotate(25deg);
+
+}
+
+.arm.right {
+
+  right: 5px;
+
+  transform: rotate(-25deg);
+
+}
+
+.claw-head.closed .arm.left {
+
+  transform: rotate(-8deg);
+
+}
+
+.claw-head.closed .arm.right {
+
+  transform: rotate(8deg);
+
+}
+
+/* CHARACTER BALLS */
+
+.balls {
+
+  position: absolute;
+
+  inset: 0;
+
+}
+
+.ball {
+
+  position: absolute;
+
+  width: 49px;
+
+  height: 49px;
+
+  border-radius: 50%;
+
+  border: 2px solid white;
+
+  background: radial-gradient(
+
+    circle at 30% 25%,
+
+    white 0 5%,
+
+    var(--ball) 42%,
+
+    #9aabc1 100%
+
+  );
+
+  box-shadow:
+
+    inset -7px -9px 12px #3c506e22,
+
+    inset 6px 7px 10px #ffffffdd,
+
+    0 5px 10px #4e648022;
+
+  transform: translate(-50%, -50%);
+
+ transition:
+  left .9s ease,
+  top .9s ease,
+  transform .5s ease,
+  opacity .5s ease;
+
+}
+
+.prize-chute {
+
+  position: absolute;
+
+  bottom: 0;
+
+  right: 13px;
+
+  width: 90px;
+
+  height: 55px;
+
+  border: 4px solid white;
+
+  border-bottom: 0;
+
+  border-radius: 13px 13px 0 0;
+
+  background: #c3d9edaa;
+
+}
+
+/* CONTROLS */
+
+.machine-base {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding-top: 15px;
+
+  gap: 10px;
+
+}
+
+.controls {
+
+  display: flex;
+
+  gap: 8px;
+
+}
+
+.control-btn {
+
+  border: 0;
+
+  border-radius: 13px;
+
+  min-width: 48px;
+
+  height: 43px;
+
+  background: linear-gradient(#fff, #e6edf5);
+
+  color: #5e6e86;
+
+  box-shadow: 0 4px 0 #b8c8d8;
+
+  font-weight: bold;
+
+}
+
+.drop-btn {
+
+  padding: 0 20px;
+
+  background: linear-gradient(#fff0f6, #f5bfd5);
+
+  box-shadow: 0 4px 0 #d99bb7;
+
+}
+
+button:disabled {
+
+  opacity: .5;
+
+  cursor: not-allowed;
+
+}
+
+.hint,
+
+.message {
+
+  text-align: center;
+
+  color: var(--muted);
+
+  font-size: .8rem;
+
+  margin-top: 15px;
+
+}
+
+/* COLLECTION */
+
+.side-card {
+
+  margin-bottom: 15px;
+
+}
+
+
+
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  align-items: start;
+  gap: 12px;
+
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #e6a9ce #fff0f7;
+}
+
+.collection-slot {
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+
+  border-radius: 15px;
+  background: #edf2f8;
+  border: 1px dashed #c8d5e3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #a1aec0;
+  font-size: 1.3rem;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.collection-slot.owned {
+  background: white;
+  border: 1px solid white;
+}
+
+
+
+.mini-ball {
+
+  width: 28px;
+
+  height: 28px;
+
+  border-radius: 50%;
+
+  border: 2px solid white;
+
+}
+
+.slot-name {
+
+  position: absolute;
+
+  bottom: 4px;
+
+  font-size: .55rem;
+
+  color: #62738c;
+
+}
+
+.empty-note {
+
+  color: var(--muted);
+
+  font-size: .82rem;
+
+  line-height: 1.6;
+
+}
+
+.reset-btn {
+
+  margin-top: 12px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #8b91a5;
+
+  text-decoration: underline;
+
+}
+
+/* REVEAL SCREEN */
+
+.overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 20;
+
+  display: none;
+
+  place-items: center;
+
+  padding: 18px;
+
+  background: #303e867a;
+
+  backdrop-filter: blur(10px);
+
+}
+
+.overlay.show {
+
+  display: grid;
+
+}
+
+.reveal-card {
+
+  width: min(500px, 100%);
+
+  background: linear-gradient(145deg, white, #f5f0ff, #eaf8ff);
+
+  border-radius: 27px;
+
+  padding: 25px;
+
+  text-align: center;
+
+  box-shadow: 0 25px 80px #25344f55;
+
+  animation: appear .35s ease-out;
+
+}
+
+@keyframes appear {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateY(15px) scale(.96);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: none;
+
+  }
+
+}
+
+.reveal-orb {
+
+  width: 95px;
+
+  height: 95px;
+
+  margin: 18px auto;
+
+  border-radius: 50%;
+
+  border: 4px solid white;
+
+  box-shadow: 0 10px 25px #8394b455;
+
+}
+
+
+.video-wrap {
+  width: 100%;
+  height: 230px;
+  margin: 15px auto;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #dfeaf5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-wrap video,
+.video-wrap .reveal-character-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+
+
+.claim-btn {
+
+  border: 0;
+
+  border-radius: 14px;
+
+  padding: 13px 35px;
+
+  color: #76536a;
+
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  background: linear-gradient(100deg, #f7c7dc, #cde9fb);
+
+  box-shadow: 0 5px 0 #c3b8d8;
+
+}
+
+@media(max-width: 760px) {
+
+  .layout {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .glass {
+
+    height: 350px;
+
+  }
+
+}
+  
+  
+.collection-character-image {
+  width: 78%;
+  height: 72%;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.reveal-character-image {
+  display: block;
+  width: 100%;
+  max-height: 230px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+  <div>
+
+    <h1>✧Good Luck!!</h1>
+
+    
+
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+
+      PULLS
+
+      <strong id="pullCount">0</strong>
+
+    </div>
+
+    <div class="stat">
+
+      COLLECTED
+
+      <strong id="ownedCount">0 / 6</strong>
+
+    </div>
+
+  </div>
+
+</header>
+
+<main class="layout">
+
+<section class="machine-card">
+
+  <div class="machine-heading">
+
+    <h2> (˶ᵔ ᵕ ᵔ˶) </h2>
+
+    <span class="status" id="status">READY</span>
+
+  </div>
+
+  <div class="machine">
+
+    <div class="machine-top">
+
+      <span></span>
+
+      <span>● ● ●</span>
+
+    </div>
+
+    <div class="glass" id="glass">
+
+      <div class="rail"></div>
+
+      <div class="claw" id="claw">
+
+        <div class="carriage"></div>
+
+        <div class="cable" id="cable"></div>
+
+        <div class="claw-head" id="clawHead">
+
+          <i class="arm left"></i>
+
+          <i class="arm right"></i>
+
+        </div>
+
+      </div>
+
+      <div class="balls" id="balls"></div>
+
+      <div class="prize-chute"></div>
+
+    </div>
+
+    <div class="machine-base">
+
+      <span>MOVE / DROP</span>
+
+      <div class="controls">
+
+        <button class="control-btn" id="leftBtn">◀</button>
+
+        <button class="control-btn drop-btn" id="dropBtn">
+
+          DROP
+
+        </button>
+
+        <button class="control-btn" id="rightBtn">▶</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <p class="hint">
+
+    Use the arrows to position the claw, then press DROP.
+
+  </p>
+
+  <div class="message" id="message">
+
+    Or use your arrow keys and space!
+
+  </div>
+
+</section>
+
+<aside>
+
+  <section class="side-card">
+
+    <h2>♡ Your Collection</h2>
+
+    <div class="collection-grid" id="collectionGrid"></div>
+
+    <p class="empty-note" id="emptyNote">
+
+      Your collection is empty for now!
+
+    </p>
+
+    <button class="reset-btn" id="resetBtn">
+
+      Reset saved collection
+
+    </button>
+
+  </section>
+
+  <section class="side-card">
+
+    <h2>How to play</h2>
+
+    <p class="empty-note">
+
+      ① Move the claw over a character orb.
+
+      <br><br>
+
+      ② Press DROP to lower the claw.
+
+      <br><br>
+
+      ③ If an orb is close enough, the claw will grab it.
+
+      <br><br>
+
+      ④ Watch the reveal, then CLAIM your character.
+
+    </p>
+
+  </section>
+
+</aside>
+
+</main>
+
+</div>
+
+<!-- CHARACTER REVEAL -->
+
+<div class="overlay" id="revealOverlay">
+
+  <div class="reveal-card">
+
+    <p>✧ NEW ARRIVAL ✧</p>
+
+    <div class="reveal-orb" id="revealOrb"></div>
+
+    <h2 id="revealName">Character</h2>
+
+    <p id="revealDescription">
+
+      A new friend has arrived!
+
+    </p>
+
+    <div class="video-wrap" id="videoWrap"></div>
+
+    <button class="claim-btn" id="claimBtn">
+
+      CLAIM
+
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+/* ==================================
+
+   CHARACTER DATABASE
+
+================================== */
+
+
+const CHARACTERS = [
+  {
+    id: "luna",
+    name: "Luna",
+    description: "A bright new presence joins your collection.",
+    video: "videos/luna.mp4",
+    image: "images/luna.png"
+  },
+  {
+    id: "mira",
+    name: "Mira",
+    description: "A little mystery, freshly retrieved.",
+    video: "videos/mira.mp4",
+    image: "images/mira.png"
+  },
+  {
+    id: "sol",
+    name: "Sol",
+    description: "A warm spark has found its way to you.",
+    video: "videos/sol.mp4",
+    image: "images/sol.png"
+  },
+  {
+    id: "niko",
+    name: "Niko",
+    description: "A new face from the arcade.",
+    video: "videos/niko.mp4",
+    image: "images/niko.png"
+  },
+  {
+    id: "aria",
+    name: "Aria",
+    description: "A lovely surprise from the machine.",
+    video: "videos/aria.mp4",
+    image: "images/aria.png"
+  },
+  {
+    id: "ren",
+    name: "Ren",
+    description: "Another story begins with this arrival.",
+    video: "videos/ren.mp4",
+    image: "images/ren.png"
+  }
+];
+
+
+const COLORS = [
+
+  "#f5b8d0",
+
+  "#a9d9f4",
+
+  "#b9e8d5",
+
+  "#d1c5f5",
+
+  "#f7d99e",
+
+  "#f5c2ad",
+
+  "#b9c8f2",
+
+  "#d8c4e8"
+
+];
+
+const STORAGE_KEY = "pastelClawCollection_v1";
+
+/* ==================================
+
+   ELEMENTS AND STATE
+
+================================== */
+
+const glass = document.getElementById("glass");
+
+const ballsLayer = document.getElementById("balls");
+
+const claw = document.getElementById("claw");
+
+const clawHead = document.getElementById("clawHead");
+
+const cable = document.getElementById("cable");
+
+let clawX = 50;
+
+let busy = false;
+
+let currentCatch = null;
+
+let balls = [];
+
+function loadCollection() {
+
+  try {
+
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+let collection = loadCollection();
+
+/* ==================================
+
+   COLLECTION SAVING
+
+================================== */
+
+function saveCollection() {
+
+  localStorage.setItem(
+
+    STORAGE_KEY,
+
+    JSON.stringify(collection)
+
+  );
+
+  renderCollection();
+
+}
+
+/* ==================================
+
+   RANDOM COLORS AND BALLS
+
+================================== */
+
+function randomColor() {
+
+  return COLORS[
+
+    Math.floor(Math.random() * COLORS.length)
+
+  ];
+
+}
+
+function createBalls() {
+
+  ballsLayer.innerHTML = "";
+  balls = [];
+
+  // Positions are percentages of the glass cabinet.
+  // The right-hand prize chute is deliberately excluded.
+  const positions = [
+    [12, 77],
+    [30, 77],
+    [48, 77],
+    [66, 77],
+    [21, 90],
+    [42, 90],
+    [63, 90],
+    [74, 90]
+  ];
+
+  const shuffled = [...CHARACTERS]
+    .sort(() => Math.random() - 0.5);
+
+  positions.forEach((pos, i) => {
+
+    const character = shuffled[i % shuffled.length];
+    const color = randomColor();
+
+    const el = document.createElement("div");
+
+    el.className = "ball";
+    el.style.setProperty("--ball", color);
+
+    el.style.left = pos[0] + "%";
+    el.style.top = pos[1] + "%";
+
+    ballsLayer.appendChild(el);
+
+    balls.push({
+      el,
+      character,
+      color,
+      x: pos[0],
+      y: pos[1]
+    });
+
+  });
+
+  positionClaw();
+}
+/* ==================================
+
+   CLAW MOVEMENT
+
+================================== */
+
+function positionClaw() {
+
+  claw.style.left = clawX + "%";
+
+}
+
+function moveClaw(direction) {
+
+  if (busy) return;
+
+  clawX = Math.max(
+
+    7,
+
+    Math.min(93, clawX + direction * 6)
+
+  );
+
+  positionClaw();
+
+  document.getElementById("message").textContent =
+
+    "Claw position: " + Math.round(clawX) + "%";
+
+}
+
+document.getElementById("leftBtn")
+
+  .addEventListener("click", () => moveClaw(-1));
+
+document.getElementById("rightBtn")
+
+  .addEventListener("click", () => moveClaw(1));
+
+document.addEventListener("keydown", e => {
+
+  if (document.getElementById("revealOverlay")
+
+    .classList.contains("show")) return;
+
+  if (e.key === "ArrowLeft") {
+
+    e.preventDefault();
+
+    moveClaw(-1);
+
+  }
+
+  if (e.key === "ArrowRight") {
+
+    e.preventDefault();
+
+    moveClaw(1);
+
+  }
+
+  if (e.key === " " && !busy) {
+
+    e.preventDefault();
+
+    dropClaw();
+
+  }
+
+});
+
+/* ==================================
+
+   CLAW ANIMATION
+
+================================== */
+
+function wait(ms) {
+
+  return new Promise(resolve => setTimeout(resolve, ms));
+
+}
+
+function setBusy(value, status, message) {
+
+  busy = value;
+
+  document.getElementById("status").textContent = status;
+
+  document.getElementById("message").textContent = message;
+
+  [
+
+    document.getElementById("leftBtn"),
+
+    document.getElementById("rightBtn"),
+
+    document.getElementById("dropBtn")
+
+  ].forEach(btn => btn.disabled = value);
+
+}
+
+async function dropClaw() {
+
+  if (busy) return;
+
+  setBusy(
+    true,
+    "LOWERING",
+    "The claw is descending..."
+  );
+
+  const glassHeight = glass.clientHeight;
+  const glassWidth = glass.clientWidth;
+
+  // Find the closest ball to the claw.
+  const target = balls
+    .filter(ball => ball.el.isConnected)
+    .map(ball => {
+
+      const ballX = glassWidth * ball.x / 100;
+
+      return {
+        ball,
+        distance: Math.abs(
+          ballX - glassWidth * clawX / 100
+        )
+      };
+
+    })
+    .sort((a, b) => a.distance - b.distance)[0];
+
+  // A ball must be within grabbing distance.
+  const caught =
+    target && target.distance <= 38
+      ? target.ball
+      : null;
+
+  // Open the claw before descending.
+  clawHead.classList.remove("closed");
+
+  // Calculate where the ball physically sits.
+  let stoppingPoint = glassHeight * 0.78;
+
+  if (caught) {
+
+    // The claw stops when it reaches the ball.
+    stoppingPoint =
+      glassHeight * caught.y / 100;
+
+    // Slightly nudge the ball toward the claw.
+    caught.x = clawX;
+    caught.el.style.left = clawX + "%";
+
+  }
+
+  // Calculate cable length so the claw head
+  // reaches the ball instead of passing through it.
+  const clawTop = 18;
+
+  const cableLength = Math.max(
+    30,
+    stoppingPoint - clawTop - 27
+  );
+
+  claw.style.top = clawTop + "px";
+  cable.style.height = cableLength + "px";
+
+  // Slower, more physical descent.
+  await wait(1450);
+
+  // The claw reaches its target.
+  clawHead.classList.add("closed");
+
+  await wait(700);
+
+  if (!caught) {
+
+    // Nothing was close enough to grab.
+    claw.style.top = "18px";
+    cable.style.height = "75px";
+
+    await wait(1400);
+
+    clawHead.classList.remove("closed");
+
+    setBusy(
+      false,
+      "READY",
+      "The claw missed! Try another position."
+    );
+
+    return;
+
+  }
+
+  // GRIP PROBABILITY
+  // The claw has a 60% chance of holding the ball.
+  const gripStrength = 0.60;
+
+  const successfulGrip =
+    Math.random() < gripStrength;
+
+  if (!successfulGrip) {
+
+    setBusy(
+      true,
+      "WEAK GRIP",
+      "The ball slipped!"
+    );
+
+    // Lift the ball briefly.
+    caught.el.style.top =
+      Math.max(25, caught.y - 12) + "%";
+
+    claw.style.top = "18px";
+    cable.style.height = "75px";
+
+    await wait(850);
+
+    // Release it back into the cabinet.
+    caught.el.style.top = caught.y + "%";
+
+    await wait(650);
+
+    clawHead.classList.remove("closed");
+
+    setBusy(
+      false,
+      "READY",
+      "The claw couldn't hold on. Try again!"
+    );
+
+    return;
+
+  }
+
+  // SUCCESSFUL GRAB
+  currentCatch = caught;
+
+  setBusy(
+    true,
+    "RETRIEVING",
+    "The claw has grabbed a character!"
+  );
+
+  // Lift the ball with the claw.
+  caught.el.style.top = "38%";
+  caught.el.style.left = "86%";
+  caught.el.style.zIndex = "6";
+
+  claw.style.left = "86%";
+  claw.style.top = "18px";
+
+  cable.style.height = "75px";
+
+  await wait(1500);
+
+  // Drop the ball into the prize chute.
+  caught.el.style.opacity = "0";
+  caught.el.style.transform =
+    "translate(-50%, -50%) scale(.2)";
+
+  await wait(500);
+
+  caught.el.remove();
+
+  balls = balls.filter(ball => ball !== caught);
+
+  document.getElementById("pullCount").textContent =
+    Number(
+      document.getElementById("pullCount").textContent
+    ) + 1;
+
+  // Return the claw to its starting position.
+  clawHead.classList.remove("closed");
+
+  clawX = 50;
+  positionClaw();
+
+  claw.style.top = "18px";
+
+  setBusy(
+    false,
+    "REVEAL",
+    "A character has arrived!"
+  );
+
+  showReveal(caught);
+
+}
+
+/* ==================================
+
+   CHARACTER REVEAL
+
+================================== */
+
+
+function showReveal(ball) {
+  const character = ball.character;
+
+  document.getElementById("revealName").textContent =
+    character.name;
+
+  document.getElementById("revealDescription").textContent =
+    character.description;
+
+  document.getElementById("revealOrb").style.background =
+    `radial-gradient(circle at 30% 25%, white 0 5%, ${ball.color} 43%, #9aaec6 100%)`;
+
+  const videoWrap = document.getElementById("videoWrap");
+  const claimBtn = document.getElementById("claimBtn");
+
+  videoWrap.innerHTML = "";
+
+  claimBtn.disabled = true;
+  claimBtn.textContent = "PLEASE WAIT...";
+
+  function displayCharacterPicture() {
+    videoWrap.innerHTML = "";
+
+    const picture = document.createElement("img");
+
+    picture.src = character.image;
+    picture.alt = character.name;
+    picture.className = "reveal-character-image";
+
+    picture.onerror = () => {
+      videoWrap.textContent =
+        "Character picture could not be loaded. Check the image path.";
+      claimBtn.disabled = true;
+    };
+
+    videoWrap.appendChild(picture);
+
+    claimBtn.disabled = false;
+    claimBtn.textContent = "CLAIM";
+  }
+
+  if (character.video) {
+
+    const video = document.createElement("video");
+
+    video.src = character.video;
+    video.controls = false;
+    video.loop = false;
+    video.muted = false;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.preload = "auto";
+
+    video.addEventListener("ended", () => {
+      displayCharacterPicture();
+    }, { once: true });
+
+    video.addEventListener("error", () => {
+      videoWrap.innerHTML =
+        "The entrance video could not be loaded. Check its file path.";
+      displayCharacterPicture();
+    }, { once: true });
+
+    // Show a prompt instead of starting the video immediately.
+    const prompt = document.createElement("div");
+
+    prompt.textContent = "✧ CLICK TO REVEAL ✧";
+    prompt.style.cursor = "pointer";
+    prompt.style.textAlign = "center";
+    prompt.style.padding = "30px";
+    prompt.style.width = "100%";
+
+    videoWrap.appendChild(prompt);
+
+    // The click directly starts the video.
+    videoWrap.addEventListener("click", function startVideo() {
+
+      videoWrap.removeEventListener("click", startVideo);
+
+      videoWrap.innerHTML = "";
+      videoWrap.appendChild(video);
+
+      video.play().catch(() => {
+        videoWrap.textContent =
+          "Video playback was blocked. Please try clicking the reveal box again.";
+      });
+
+    });
+
+  } else {
+    displayCharacterPicture();
+  }
+
+  document.getElementById("revealOverlay")
+    .classList.add("show");
+}
+/* ==================================
+
+   CLAIM CHARACTER
+
+================================== */
+
+document.getElementById("claimBtn")
+
+  .addEventListener("click", () => {
+
+    if (!currentCatch) return;
+
+    const alreadyOwned = collection.some(
+
+      item => item.id === currentCatch.character.id
+
+    );
+
+    if (!alreadyOwned) {
+
+      collection.push({
+
+        id: currentCatch.character.id,
+
+        name: currentCatch.character.name,
+
+        color: currentCatch.color
+
+      });
+
+      saveCollection();
+
+    }
+
+    document.getElementById("revealOverlay")
+
+      .classList.remove("show");
+
+    currentCatch = null;
+
+    createBalls();
+
+    setBusy(
+
+      false,
+
+      "READY",
+
+      "Ready for another pull. Good luck!"
+
+    );
+
+  });
+
+/* ==================================
+
+   COLLECTION DISPLAY
+
+================================== */
+
+
+function renderCollection() {
+  const grid = document.getElementById("collectionGrid");
+
+  grid.innerHTML = "";
+
+  CHARACTERS.forEach(character => {
+    const owned = collection.find(
+      item => item.id === character.id
+    );
+
+    const slot = document.createElement("div");
+
+    slot.className =
+      "collection-slot" + (owned ? " owned" : "");
+
+    if (owned) {
+      const picture = document.createElement("img");
+
+      picture.src = character.image;
+      picture.alt = character.name;
+      picture.className = "collection-character-image";
+
+      slot.appendChild(picture);
+
+      const name = document.createElement("span");
+
+      name.className = "slot-name";
+      name.textContent = character.name;
+
+      slot.appendChild(name);
+
+    } else {
+      slot.textContent = "✧";
+    }
+
+    grid.appendChild(slot);
+  });
+
+  document.getElementById("ownedCount").textContent =
+    collection.length + " / " + CHARACTERS.length;
+
+  document.getElementById("emptyNote").style.display =
+    collection.length ? "none" : "block";
+}
+
+
+/* ==================================
+
+   RESET COLLECTION
+
+================================== */
+
+document.getElementById("resetBtn")
+
+  .addEventListener("click", () => {
+
+    if (!confirm("Clear your saved collection?")) return;
+
+    collection = [];
+
+    saveCollection();
+
+    document.getElementById("pullCount").textContent = "0";
+
+  });
+
+/* ==================================
+
+   INITIALIZE GAME
+
+================================== */
+
+renderCollection();
+
+createBalls();
+
+</script>
+
+</body>
+
+</html>
